@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NewNoteActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorYellow"
+        android:layout_height="match_parent">
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/new_note_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:hint="Type your title here...."
+            android:id="@+id/new_note_title"
+            android:padding="10dp"
+            android:background="@android:color/transparent"
+            android:layout_height="wrap_content" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:alpha=".3"
+            android:layout_margin="10dp"
+            android:background="@android:color/black"
+            android:layout_height="1dp" />
+
+
+        <EditText
+            android:id="@+id/new_note_content"
+            android:layout_width="match_parent"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:padding="10dp"
+            android:lineSpacingExtra="16dp"
+            android:hint="Type your description here..."
+            android:inputType="textMultiLine"
+            android:gravity="top"
+            android:layout_weight="1"
+            android:layout_height="match_parent" />
+
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="ca-app-pub-1787292132881960/5723735633">
+        </com.google.android.gms.ads.AdView>
+
+
+    </LinearLayout>
+
+</RelativeLayout>
