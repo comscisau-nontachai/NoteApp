@@ -184,7 +184,7 @@ public class NewNoteActivity extends AppCompatActivity {
 
 
         } else {
-            Toasty.error(this, "User is not signed In.", Toast.LENGTH_SHORT, true).show();
+            Toasty.error(this, "Singed In first!!.", Toast.LENGTH_SHORT, true).show();
         }
     }
 
@@ -238,7 +238,7 @@ public class NewNoteActivity extends AppCompatActivity {
 
                 if(title.isEmpty())
                 {
-                    edt_title.setError("Enter title!!");
+                    edt_title.setError("Enter Title!!");
                 }else if(content.isEmpty())
                 {
                     edt_content.setError("Enter Description");
