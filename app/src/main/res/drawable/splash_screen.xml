@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/white"></solid>
+        </shape>
+    </item>
+    <item
+        android:width="90dp"
+        android:height="80dp"
+        android:drawable="@drawable/ic_note_sc"
+        android:gravity="center"
+        />
+</layer-list>

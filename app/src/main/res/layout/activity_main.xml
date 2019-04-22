@@ -4,24 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg1"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:id="@+id/recycler_view"
-        android:layout_height="match_parent">
-    </android.support.v7.widget.RecyclerView>
 
-    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/adView"
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:id="@+id/toolbar_main"
+        android:theme="?attr/actionBarTheme"
+        android:background="@color/colorPrimary"
+        app:navigationIcon="@drawable/ic_person02"
+        android:layout_height="?attr/actionBarSize"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_below="@+id/toolbar_main"
+        android:paddingTop="5dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        tools:listitem="@layout/item_note"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        ads:adSize="SMART_BANNER"
-        ads:adUnitId="ca-app-pub-1787292132881960/5723735633">
-    </com.google.android.gms.ads.AdView>
+        android:src="@drawable/ic_add"
+        android:id="@+id/fab_add_note"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content" />
+
+    <fragment
+        android:name="nontachai.becomedev.noteapp.AdsFragment"
+        android:id="@+id/title_fragment"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/fragment_ads"/>
 
 </RelativeLayout>

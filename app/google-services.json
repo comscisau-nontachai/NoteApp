@@ -23,6 +23,22 @@
           }
         },
         {
+          "client_id": "398580085571-nm9eo0rhs8b5ci8rvrvb7dih6o4epc20.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "nontachai.becomedev.noteapp",
+            "certificate_hash": "2210b5949e7e1be9cfdaf6d15086cf5b4692c4d8"
+          }
+        },
+        {
+          "client_id": "398580085571-nof5g08tahitfvgi1mtsjceuums0akr6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "nontachai.becomedev.noteapp",
+            "certificate_hash": "8792327dfbd0e7232f3cac16a392a78129bf983a"
+          }
+        },
+        {
           "client_id": "398580085571-nik6pnfu7rgajtk04c8tb8v95pti2m8i.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -33,20 +49,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "398580085571-nik6pnfu7rgajtk04c8tb8v95pti2m8i.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

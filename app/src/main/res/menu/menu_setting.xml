@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/nav_rate_app"
+        android:title="Rate App"
+        android:icon="@drawable/ic_delete"/>
+    <item android:id="@+id/nav_policy"
+        android:title="View Policy"
+        android:icon="@drawable/ic_delete"/>
+    <item android:id="@+id/nav_exit"
+        android:title="Sign Out"
+        android:icon="@drawable/ic_save"/>
+
+</menu>

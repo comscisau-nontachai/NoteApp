@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "398580085571",
+    "firebase_url": "https://noteapp-244f5.firebaseio.com",
+    "project_id": "noteapp-244f5",
+    "storage_bucket": "noteapp-244f5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:398580085571:android:8365d4eebcc71394",
+        "android_client_info": {
+          "package_name": "nontachai.becomedev.noteapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "398580085571-enjiqshck7r8gj2ubf7v6ua1e4uc4pfg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "nontachai.becomedev.noteapp",
+            "certificate_hash": "7e3c22cd57a86c7c8918dfa2f1d73aad341feb96"
+          }
+        },
+        {
+          "client_id": "398580085571-nik6pnfu7rgajtk04c8tb8v95pti2m8i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0Z6YH-YZx9H6gfNk6F3qJzDsAyRR9UxY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "398580085571-nik6pnfu7rgajtk04c8tb8v95pti2m8i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,19 +1,18 @@
 package nontachai.becomedev.noteapp;
 
-import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Path;
-import android.os.AsyncTask;
-import android.os.StrictMode;
-import android.provider.ContactsContract;
-import android.renderscript.Script;
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -21,10 +20,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,32 +36,27 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth fAuth;
-    private GridLayoutManager gridLayoutManager;
     private DatabaseReference fNoteDatabase;
 
     private RecyclerView recyclerView;
+    private FloatingActionButton fabAddNote;
     private FirebaseRecyclerAdapter adapter;
 
-    private AdView mAdView;
+    private Toolbar mToolbar;
 
 
     @Override
@@ -73,9 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycler_view);
 
-
-//        gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, true);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
@@ -83,35 +73,34 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
 
-//        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
-
         fAuth = FirebaseAuth.getInstance();
         if (fAuth.getCurrentUser() != null) {
             fNoteDatabase = FirebaseDatabase.getInstance().getReference().child("Notes").child(fAuth.getCurrentUser().getUid());   //fAuth.getCurrentUser().getUid()
         }
 
+        //set toolbar
+        mToolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(fAuth.getCurrentUser().getEmail());
+
         fetch();
 
-
-        ///admob
-        MobileAds.initialize(this, "ca-app-pub-1787292132881960~8520030186");//app id
-        AdView adView = new AdView(this);
-        adView.setAdSize(AdSize.BANNER);
-        adView.setAdUnitId("ca-app-pub-1787292132881960/5723735633");//unit id  ca-app-pub-3940256099942544/6300978111
-
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-        ////end admob
-
+        fabAddNote = findViewById(R.id.fab_add_note);
+        fabAddNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), NewNoteActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
-    private int dpToPx(int dp) {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    @Override
+    public void onBackPressed() {
     }
-
 
     @Override
     protected void onStart() {
@@ -125,15 +114,45 @@ public class MainActivity extends AppCompatActivity {
         adapter.stopListening();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_setting, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_rate_app:{
+                try{
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+getPackageName())));
+                }catch (ActivityNotFoundException ignored){
+                    Toast.makeText(this, "can't find app", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse("http://play.google.com/store/apps/details?id="+getPackageName())));
+                }
+            }
+                break;
+            case R.id.nav_policy: {
+                showPolicyApp();
+            }
+            break;
+            case R.id.nav_exit: {
+                fAuth.signOut();
+                finish();
+            }
+            break;
+        }
+        return true;
+    }
+
     private void fetch() {
 
-//        Query query = FirebaseDatabase.getInstance()
-//                .getReference()
-//                .child("Notes").child("vENReL7xcobRXnn6uihqXj89vfy1");//vENReL7xcobRXnn6uihqXj89vfy1 fAuth.getCurrentUser().getUid()
+        final SweetAlertDialog dialogLoading = new SweetAlertDialog(this,SweetAlertDialog.PROGRESS_TYPE);
+        dialogLoading.setContentText("Loading...");
+        dialogLoading.setCancelable(false);
+        dialogLoading.show();
 
         Query query = fNoteDatabase.orderByChild("timestamp");
-
-
         FirebaseRecyclerOptions<Model> options =
                 new FirebaseRecyclerOptions.Builder<Model>()
                         .setQuery(query, new SnapshotParser<Model>() {
@@ -149,29 +168,26 @@ public class MainActivity extends AppCompatActivity {
 
                         })
                         .build();
-
         adapter = new FirebaseRecyclerAdapter<Model, ViewHolder>(options) {
             @Override
             public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.single_note_layout, parent, false);
+                        .inflate(R.layout.item_note, parent, false);
 
                 return new ViewHolder(view);
             }
-
 
             @Override
             protected void onBindViewHolder(ViewHolder holder, final int position, Model model) {
 
                 final String noteId = getRef(position).getKey();
 
-                holder.setTxtTitle(model.getmTitle());
-                holder.setTxtDate(model.getmDate());
+                holder.txtTitle.setText(model.getmTitle());
+                holder.txtDate.setText(convertDateFormat(model.getmDate()));
 
-                GetTimeAgo getTimeAgo = new GetTimeAgo();
-                holder.setTxtContent(getTimeAgo.getTimeAgo(Long.parseLong(model.getmDesc()), getApplicationContext()));
+                holder.txtTimeAgo.setText(new GetTimeAgo().getTimeAgo(Long.parseLong(model.getmDesc()), getApplicationContext()));
 
-                holder.root.setOnClickListener(new View.OnClickListener() {
+                holder.linear.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
@@ -180,68 +196,71 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
+                dialogLoading.dismissWithAnimation();
             }
-
-
         };
         recyclerView.setAdapter(adapter);
+        //dialogLoading.dismissWithAnimation();
+
     }
+
+    private String convertDateFormat(String date) {
+        SimpleDateFormat curFormat = new SimpleDateFormat("EEE dd-MM-yyyy");
+
+        Date dateObj = null;
+        try {
+            dateObj = curFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat newFormat = new SimpleDateFormat("dd MMMM yyyy");
+        String new_date = newFormat.format(dateObj);
+
+        return new_date;
+    }
+
+    private void showPolicyApp() {
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Privacy Policy");
+
+        WebView webView = new WebView(this);
+        webView.loadUrl("https://comscisau-nontachai.github.io/NoteApp/privacy_policy.html");
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
+
+        alert.setView(webView);
+        alert.setNegativeButton("close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        alert.show();
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public LinearLayout root;
-        public TextView txtTitle;
-        public TextView txtTime;
-        public TextView txtDate;
+        LinearLayout linear;
+        TextView txtTitle;
+        TextView txtTimeAgo;
+        TextView txtDate;
+        TextView txtDay;
 
-        public ViewHolder(View itemView) {
+
+        ViewHolder(View itemView) {
             super(itemView);
-            root = itemView.findViewById(R.id.list_root);
-            txtTitle = itemView.findViewById(R.id.note_title);
-            txtTime = itemView.findViewById(R.id.note_time);
-            txtDate = itemView.findViewById(R.id.note_date);
+            linear = itemView.findViewById(R.id.linear_layout);
+            txtTitle = itemView.findViewById(R.id.txt_note_title);
+            txtTimeAgo = itemView.findViewById(R.id.txt_note_time_ago);
+            txtDate = itemView.findViewById(R.id.txt_note_date);
+            //txtDay = itemView.findViewById(R.id.txt_note_day);
         }
-
-
-        public void setTxtTitle(String string) {
-            txtTitle.setText(string);
-        }
-
-        public void setTxtContent(String string) {
-            txtTime.setText(string);
-        }
-
-        public void setTxtDate(String string) {
-            txtDate.setText(string);
-        }
-    }
-
-    private void updateUI() {
-
-//        if (fAuth.getCurrentUser() != null) {
-//        } else {
-//            Intent intent = new Intent(MainActivity.this, StartActivity.class);
-//            startActivity(intent);
-//        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
-
-        switch (item.getItemId()) {
-            case R.id.main_new_note_btn:
-                Intent intent = new Intent(MainActivity.this, NewNoteActivity.class);
-                startActivity(intent);
-        }
-
-        return true;
     }
 }
