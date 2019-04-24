@@ -25,8 +25,6 @@ class AdsFragment : Fragment() {
         showAds()
     }
     private fun showAds(){
-        // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
-        //my App ID : ca-app-pub-1787292132881960~8520030186
         MobileAds.initialize(context, "ca-app-pub-1787292132881960~8520030186")
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
